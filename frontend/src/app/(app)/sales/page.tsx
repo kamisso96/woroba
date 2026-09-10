@@ -1,13 +1,15 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Plus, Receipt } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { PageHeader } from "@/components/nav/page-header";
-import { useSales } from "@/lib/queries/use-sales";
-import { formatPrice } from "@/lib/products";
-import { paymentMethodLabels } from "@/lib/sales";
+import Link from 'next/link';
+import { Plus, Receipt } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { PageHeader } from '@/components/nav/page-header';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ListSkeleton } from '@/components/ui/loading-skeleton';
+import { useSales } from '@/lib/queries/use-sales';
+import { formatPrice } from '@/lib/products';
+import { paymentMethodLabels } from '@/lib/sales';
 
 export default function SalesPage() {
   const { data: sales, isLoading } = useSales();
@@ -28,24 +30,16 @@ export default function SalesPage() {
       />
 
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-6">
-        {isLoading && (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            Chargement...
-          </p>
-        )}
+        {isLoading && <ListSkeleton rows={4} />}
 
         {sales && sales.length === 0 && (
-          <Card>
-            <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-              <Receipt className="h-10 w-10 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                Aucune vente pour le moment.
-              </p>
-              <Link href="/sales/new">
-                <Button size="sm">Enregistrer ma premiere vente</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={Receipt}
+            title="Aucune vente pour le moment"
+            description="Enregistrez votre première vente pour la voir apparaître ici."
+            actionLabel="Enregistrer une vente"
+            actionHref="/sales/new"
+          />
         )}
 
         {sales && sales.length > 0 && (
@@ -57,14 +51,14 @@ export default function SalesPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-medium">
-                          {new Date(s.createdAt).toLocaleString("fr-FR", {
-                            dateStyle: "medium",
-                            timeStyle: "short",
+                          {new Date(s.createdAt).toLocaleString('fr-FR', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
                           })}
                         </p>
                         <p className="mt-0.5 text-xs text-muted-foreground">
                           {s.saleItems.length} article
-                          {s.saleItems.length > 1 ? "s" : ""} -{" "}
+                          {s.saleItems.length > 1 ? 's' : ''} ·{' '}
                           {paymentMethodLabels[s.paymentMethod]}
                         </p>
                         <ul className="mt-2 space-y-0.5">
@@ -73,12 +67,12 @@ export default function SalesPage() {
                               key={item.id}
                               className="truncate text-xs text-muted-foreground"
                             >
-                              {item.quantity} x {item.product.name}
+                              {item.quantity} × {item.product.name}
                             </li>
                           ))}
                           {s.saleItems.length > 3 && (
                             <li className="text-xs text-muted-foreground">
-                              ... et {s.saleItems.length - 3} autres
+                              … et {s.saleItems.length - 3} autres
                             </li>
                           )}
                         </ul>

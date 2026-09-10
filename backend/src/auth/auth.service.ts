@@ -63,7 +63,7 @@ export class AuthService {
     return { user: this.sanitizeUser(user), ...tokens };
   }
 
-  async refreshToken(dto: RefreshTokenDto) {
+    async refreshToken(dto: RefreshTokenDto) {
     const tokenRecord = await this.prisma.refreshToken.findUnique({
       where: { token: dto.refreshToken },
       include: { user: true },
@@ -73,9 +73,15 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token invalide ou expiré');
     }
 
-    await this.prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
+    // Supprimer l'ancien refresh token (deleteMany evite l'erreur P2025 si deja consomme)
+    await this.prisma.refreshToken.deleteMany({
+      where: { id: tokenRecord.id },
+    });
 
-    const tokens = await this.generateTokens(tokenRecord.user.id, tokenRecord.user.email);
+    const tokens = await this.generateTokens(
+      tokenRecord.user.id,
+      tokenRecord.user.email,
+    );
     return { user: this.sanitizeUser(tokenRecord.user), ...tokens };
   }
 

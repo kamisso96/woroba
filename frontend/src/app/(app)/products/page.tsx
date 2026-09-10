@@ -2,11 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Plus, Search } from 'lucide-react';
+import { Package, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageHeader } from '@/components/nav/page-header';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ListSkeleton } from '@/components/ui/loading-skeleton';
 import { useProducts } from '@/lib/queries/use-products';
 import { formatPrice, getStockStatus } from '@/lib/products';
 
@@ -18,7 +20,7 @@ export default function ProductsPage() {
     <>
       <PageHeader
         title="Produits"
-        subtitle="Gerer votre catalogue"
+        subtitle="Gérer votre catalogue"
         action={
           <Link href="/products/new">
             <Button size="sm">
@@ -40,27 +42,32 @@ export default function ProductsPage() {
           />
         </div>
 
-        {isLoading && (
-          <p className="py-8 text-center text-sm text-muted-foreground">Chargement...</p>
-        )}
+        {isLoading && <ListSkeleton rows={5} />}
 
         {error && (
-          <p className="py-8 text-center text-sm text-destructive">
-            Impossible de charger les produits.
-          </p>
+          <EmptyState
+            icon={Package}
+            title="Impossible de charger les produits"
+            description="Vérifiez votre connexion et réessayez."
+          />
         )}
 
-        {products && products.length === 0 && (
-          <Card>
-            <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-              <p className="text-sm text-muted-foreground">
-                Aucun produit pour le moment.
-              </p>
-              <Link href="/products/new">
-                <Button size="sm">Ajouter mon premier produit</Button>
-              </Link>
-            </CardContent>
-          </Card>
+        {products && products.length === 0 && !search && (
+          <EmptyState
+            icon={Package}
+            title="Aucun produit pour le moment"
+            description="Commencez par ajouter votre premier produit pour suivre votre stock."
+            actionLabel="Ajouter mon premier produit"
+            actionHref="/products/new"
+          />
+        )}
+
+        {products && products.length === 0 && search && (
+          <EmptyState
+            icon={Search}
+            title="Aucun résultat"
+            description={`Aucun produit ne correspond à « ${search} ».`}
+          />
         )}
 
         {products && products.length > 0 && (
@@ -70,13 +77,13 @@ export default function ProductsPage() {
               return (
                 <li key={p.id}>
                   <Link href={`/products/${p.id}`}>
-                    <Card className="transition hover:border-primary/50">
+                    <Card className="transition-all hover:border-primary/50 hover:shadow-sm">
                       <CardContent className="flex items-center justify-between gap-3 p-4">
                         <div className="min-w-0 flex-1">
                           <p className="truncate font-medium">{p.name}</p>
                           <p className="mt-0.5 text-xs text-muted-foreground">
                             {formatPrice(p.sellingPrice)}
-                            {p.category && ` - ${p.category.name}`}
+                            {p.category && ` · ${p.category.name}`}
                           </p>
                         </div>
                         <div className="text-right">
@@ -88,7 +95,7 @@ export default function ProductsPage() {
                               status === 'out'
                                 ? 'text-destructive'
                                 : status === 'low'
-                                ? 'text-amber-600'
+                                ? 'text-amber-600 dark:text-amber-500'
                                 : 'text-muted-foreground'
                             }`}
                           >

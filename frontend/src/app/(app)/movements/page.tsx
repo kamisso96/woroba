@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { ArrowDownCircle, ArrowUpCircle, RefreshCw } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageHeader } from '@/components/nav/page-header';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ListSkeleton } from '@/components/ui/loading-skeleton';
 import { useMovements } from '@/lib/queries/use-movements';
 import { MovementType } from '@/lib/movements';
 
 const filters: { value: MovementType | 'ALL'; label: string }[] = [
   { value: 'ALL', label: 'Tous' },
-  { value: 'IN', label: 'Entrees' },
+  { value: 'IN', label: 'Entrées' },
   { value: 'OUT', label: 'Sorties' },
   { value: 'ADJUSTMENT', label: 'Ajustements' },
 ];
@@ -22,17 +24,20 @@ export default function MovementsPage() {
 
   return (
     <>
-      <PageHeader title="Mouvements" subtitle="Historique des entrees et sorties" />
+      <PageHeader
+        title="Mouvements"
+        subtitle="Historique des entrées et sorties"
+      />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-6">
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
             <button
               key={f.value}
               onClick={() => setFilter(f.value)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 filter === f.value
                   ? 'border-primary bg-primary text-primary-foreground'
-                  : 'bg-card text-muted-foreground hover:border-primary/50'
+                  : 'bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground'
               }`}
             >
               {f.label}
@@ -40,20 +45,14 @@ export default function MovementsPage() {
           ))}
         </div>
 
-        {isLoading && (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            Chargement...
-          </p>
-        )}
+        {isLoading && <ListSkeleton rows={5} />}
 
         {movements && movements.length === 0 && (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-sm text-muted-foreground">
-                Aucun mouvement pour le moment.
-              </p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={RefreshCw}
+            title="Aucun mouvement enregistré"
+            description="Les entrées et sorties de stock apparaîtront ici."
+          />
         )}
 
         {movements && movements.length > 0 && (
@@ -71,7 +70,7 @@ export default function MovementsPage() {
                           isAdj
                             ? 'text-blue-500'
                             : isIn
-                            ? 'text-green-600'
+                            ? 'text-green-600 dark:text-green-500'
                             : 'text-red-500'
                         }`}
                       />
@@ -80,14 +79,17 @@ export default function MovementsPage() {
                           {m.product.name}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {m.reason || (isIn ? 'Entree' : isAdj ? 'Ajustement' : 'Sortie')}{' '}
-                          - {new Date(m.createdAt).toLocaleDateString('fr-FR')}
+                          {m.reason ||
+                            (isIn ? 'Entrée' : isAdj ? 'Ajustement' : 'Sortie')}{' '}
+                          · {new Date(m.createdAt).toLocaleDateString('fr-FR')}
                         </p>
                       </div>
                       <div className="shrink-0 text-right">
                         <p
                           className={`text-sm font-semibold ${
-                            m.quantityChange > 0 ? 'text-green-600' : 'text-red-500'
+                            m.quantityChange > 0
+                              ? 'text-green-600 dark:text-green-500'
+                              : 'text-red-500'
                           }`}
                         >
                           {m.quantityChange > 0 ? '+' : ''}
