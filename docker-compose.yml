@@ -1,0 +1,17 @@
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: woroba-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: woroba
+      POSTGRES_PASSWORD: woroba_dev_password
+      POSTGRES_DB: woroba_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - woroba_db_data:/var/lib/postgresql/data
+
+volumes:
+  woroba_db_data:

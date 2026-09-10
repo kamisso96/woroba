@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+enum PaymentMethod {
+  CASH
+  MOBILE_MONEY
+  CARD
+  OTHER
+}
+
+enum SaleStatus {
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String   @map("full_name")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  shops         Shop[]
+  movements     StockMovement[]
+  sales         Sale[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model Shop {
+  id        String   @id @default(uuid())
+  ownerId   String   @map("owner_id")
+  name      String
+  currency  String   @default("EUR")
+  address   String?
+  logoUrl   String?  @map("logo_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner      User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  categories Category[]
+  products   Product[]
+  movements  StockMovement[]
+  sales      Sale[]
+  suppliers  Supplier[]
+  alerts     Alert[]
+
+  @@map("shops")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  shopId    String   @map("shop_id")
+  name      String
+  color     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  shop     Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             String   @id @default(uuid())
+  shopId         String   @map("shop_id")
+  categoryId     String?  @map("category_id")
+  name           String
+  sku            String?
+  barcode        String?
+  description    String?
+  imageUrl       String?  @map("image_url")
+  purchasePrice  Decimal  @default(0) @map("purchase_price") @db.Decimal(10, 2)
+  sellingPrice   Decimal  @default(0) @map("selling_price") @db.Decimal(10, 2)
+  quantity       Int      @default(0)
+  alertThreshold Int      @default(0) @map("alert_threshold")
+  unit           String   @default("piece")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  shop      Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  category  Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  movements StockMovement[]
+  saleItems SaleItem[]
+  alerts    Alert[]
+
+  @@unique([shopId, sku])
+  @@map("products")
+}
+
+model StockMovement {
+  id             String       @id @default(uuid())
+  productId      String       @map("product_id")
+  shopId         String       @map("shop_id")
+  type           MovementType
+  quantityChange Int          @map("quantity_change")
+  reason         String?
+  reference      String?
+  createdById    String       @map("created_by_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shop      Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  createdBy User    @relation(fields: [createdById], references: [id])
+
+  @@index([productId])
+  @@index([shopId])
+  @@map("stock_movements")
+}
+
+model Sale {
+  id            String        @id @default(uuid())
+  shopId        String        @map("shop_id")
+  sellerId      String        @map("seller_id")
+  totalAmount   Decimal       @default(0) @map("total_amount") @db.Decimal(10, 2)
+  paymentMethod PaymentMethod @default(CASH) @map("payment_method")
+  status        SaleStatus    @default(COMPLETED)
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  shop      Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  seller    User       @relation(fields: [sellerId], references: [id])
+  saleItems SaleItem[]
+
+  @@index([shopId])
+  @@map("sales")
+}
+
+model SaleItem {
+  id         String  @id @default(uuid())
+  saleId     String  @map("sale_id")
+  productId  String  @map("product_id")
+  quantity   Int
+  unitPrice  Decimal @map("unit_price") @db.Decimal(10, 2)
+  totalPrice Decimal @map("total_price") @db.Decimal(10, 2)
+
+  sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("sale_items")
+}
+
+model Supplier {
+  id          String   @id @default(uuid())
+  shopId      String   @map("shop_id")
+  name        String
+  contactName String?  @map("contact_name")
+  email       String?
+  phone       String?
+  address     String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@map("suppliers")
+}
+
+model Alert {
+  id        String   @id @default(uuid())
+  shopId    String   @map("shop_id")
+  productId String   @map("product_id")
+  type      String
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  shop    Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
