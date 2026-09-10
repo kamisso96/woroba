@@ -56,19 +56,21 @@ export function SaleCart() {
     if (cart.length === 0) return;
     try {
       await create.mutateAsync({ items: cart, paymentMethod });
-      toast.success('Vente enregistree');
+      toast.success('Vente enregistrée');
       setCart([]);
       router.push('/sales');
     } catch (err: unknown) {
-      const message =
+      const responseMessage =
         typeof err === 'object' &&
         err !== null &&
         'response' in err &&
-        typeof (err as { response?: { data?: { message?: string } } }).response?.data?.message === 'string'
-          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
-          : 'Erreur lors de la vente';
+        typeof (err as { response?: { data?: { message?: string } } }).response
+          ?.data?.message === 'string'
+          ? (err as { response?: { data?: { message?: string } } }).response!
+              .data!.message
+          : undefined;
 
-      toast.error(message);
+      toast.error(responseMessage || 'Erreur lors de la vente');
     }
   }
 
@@ -81,24 +83,28 @@ export function SaleCart() {
         </h2>
         {products && products.length > 0 ? (
           <ul className="space-y-2">
-            {products.map((p) => {
+            {products.map((p, index) => {
               const disabled = p.quantity <= 0;
+              const staggerClass = `stagger-${Math.min(index + 1, 10)}`;
               return (
-                <li key={p.id}>
+                <li
+                  key={p.id}
+                  className={`animate-slide-up ${staggerClass}`}
+                >
                   <button
                     type="button"
                     onClick={() => !disabled && addProduct(p.id)}
                     disabled={disabled}
-                    className={`flex w-full items-center justify-between rounded-lg border bg-card p-3 text-left transition ${
+                    className={`tap flex w-full items-center justify-between rounded-lg border bg-card p-3 text-left transition-all duration-150 ${
                       disabled
                         ? 'cursor-not-allowed opacity-50'
-                        : 'hover:border-primary'
+                        : 'hover:border-primary hover:shadow-sm'
                     }`}
                   >
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{p.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {formatPrice(p.sellingPrice)} - Stock : {p.quantity}
+                        {formatPrice(p.sellingPrice)} · Stock : {p.quantity}
                       </p>
                     </div>
                     <Plus className="ml-2 h-4 w-4 shrink-0 text-primary" />
@@ -118,8 +124,10 @@ export function SaleCart() {
 
       {/* Colonne droite : panier */}
       <div>
-        <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Panier</h2>
-        <Card>
+        <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+          Panier
+        </h2>
+        <Card className="animate-fade-in">
           <CardContent className="space-y-3 p-4">
             {cart.length === 0 ? (
               <p className="py-4 text-center text-sm text-muted-foreground">
@@ -129,35 +137,39 @@ export function SaleCart() {
               <>
                 <ul className="space-y-2">
                   {cart.map((line) => {
-                    const product = products?.find((p) => p.id === line.productId);
+                    const product = products?.find(
+                      (p) => p.id === line.productId,
+                    );
                     if (!product) return null;
                     return (
                       <li
                         key={line.productId}
-                        className="flex items-center gap-2 border-b pb-2 last:border-b-0"
+                        className="animate-pop flex items-center gap-2 border-b pb-2 last:border-b-0"
                       >
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium">
                             {product.name}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {formatPrice(product.sellingPrice)} x {line.quantity}
+                            {formatPrice(product.sellingPrice)} × {line.quantity}
                           </p>
                         </div>
                         <div className="flex items-center gap-1">
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-7 w-7 p-0"
+                            className="tap h-7 w-7 p-0"
                             onClick={() => decrement(line.productId)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
-                          <span className="w-6 text-center text-sm">{line.quantity}</span>
+                          <span className="w-6 text-center text-sm">
+                            {line.quantity}
+                          </span>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-7 w-7 p-0"
+                            className="tap h-7 w-7 p-0"
                             onClick={() => addProduct(line.productId)}
                             disabled={line.quantity >= product.quantity}
                           >
@@ -166,7 +178,7 @@ export function SaleCart() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 w-7 p-0"
+                            className="tap h-7 w-7 p-0"
                             onClick={() => removeLine(line.productId)}
                           >
                             <Trash2 className="h-3 w-3 text-destructive" />
@@ -180,30 +192,38 @@ export function SaleCart() {
                 <div className="space-y-2 border-t pt-3">
                   <div className="flex items-center justify-between text-base font-semibold">
                     <span>Total</span>
-                    <span>{formatPrice(total)}</span>
+                    <span className="animate-pop">{formatPrice(total)}</span>
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-medium">Mode de paiement</label>
+                    <label className="text-xs font-medium">
+                      Mode de paiement
+                    </label>
                     <select
                       value={paymentMethod}
-                      onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
+                      onChange={(e) =>
+                        setPaymentMethod(e.target.value as PaymentMethod)
+                      }
                       className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                     >
-                      {Object.entries(paymentMethodLabels).map(([key, label]) => (
-                        <option key={key} value={key}>
-                          {label}
-                        </option>
-                      ))}
+                      {Object.entries(paymentMethodLabels).map(
+                        ([key, label]) => (
+                          <option key={key} value={key}>
+                            {label}
+                          </option>
+                        ),
+                      )}
                     </select>
                   </div>
 
                   <Button
-                    className="w-full"
+                    className="tap w-full"
                     onClick={validate}
                     disabled={create.isPending}
                   >
-                    {create.isPending ? 'Enregistrement...' : 'Valider la vente'}
+                    {create.isPending
+                      ? 'Enregistrement...'
+                      : 'Valider la vente'}
                   </Button>
                 </div>
               </>

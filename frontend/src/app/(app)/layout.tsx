@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { Sidebar } from '@/components/nav/sidebar';
 import { BottomNav } from '@/components/nav/bottom-nav';
+import { PageTransition } from '@/components/page-transition';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -29,9 +30,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-muted/30">
       <Sidebar />
       <div className="flex flex-1 flex-col pb-20 md:pb-0">
-        {children}
+        <PageTransition>
+          {children}
+        </PageTransition>
       </div>
       <BottomNav />
     </div>
+    
   );
 }

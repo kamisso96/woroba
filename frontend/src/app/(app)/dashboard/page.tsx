@@ -55,11 +55,11 @@ export default function DashboardPage() {
       />
 
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-6">
-        {loading ? (
+                {loading ? (
           <StatsSkeleton />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card className="animate-slide-up stagger-1 card-interactive">
               <CardHeader>
                 <CardDescription>Valeur du stock</CardDescription>
                 <CardTitle className="text-2xl">
@@ -68,7 +68,7 @@ export default function DashboardPage() {
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="animate-slide-up stagger-2 card-interactive">
               <CardHeader>
                 <CardDescription>Produits</CardDescription>
                 <CardTitle className="text-2xl">
@@ -77,7 +77,7 @@ export default function DashboardPage() {
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="animate-slide-up stagger-3 card-interactive">
               <CardHeader>
                 <CardDescription>Alertes stock</CardDescription>
                 <CardTitle
@@ -90,7 +90,7 @@ export default function DashboardPage() {
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="animate-slide-up stagger-4 card-interactive">
               <CardHeader>
                 <CardDescription>Ventes du jour</CardDescription>
                 <CardTitle className="text-2xl">

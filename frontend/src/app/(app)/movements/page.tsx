@@ -55,15 +55,16 @@ export default function MovementsPage() {
           />
         )}
 
-        {movements && movements.length > 0 && (
+                {movements && movements.length > 0 && (
           <ul className="space-y-2">
-            {movements.map((m) => {
+            {movements.map((m, index) => {
               const isIn = m.type === 'IN';
               const isAdj = m.type === 'ADJUSTMENT';
               const Icon = isAdj ? RefreshCw : isIn ? ArrowDownCircle : ArrowUpCircle;
+              const staggerClass = `stagger-${Math.min(index + 1, 10)}`;
               return (
-                <li key={m.id}>
-                  <Card>
+                <li key={m.id} className={`animate-slide-up ${staggerClass}`}>
+                  <Card className="card-interactive">
                     <CardContent className="flex items-center gap-3 p-4">
                       <Icon
                         className={`h-8 w-8 shrink-0 ${

@@ -21,14 +21,21 @@ export function BottomNav() {
           const active = pathname.startsWith(item.href);
           const Icon = item.icon;
           return (
-            <li key={item.href}>
+            <li key={item.href} className="relative">
+              {active && (
+                <span className="animate-fade-in absolute left-1/2 top-0 h-0.5 w-8 -translate-x-1/2 rounded-b-full bg-primary" />
+              )}
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors ${
+                className={`tap flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors ${
                   active ? 'text-primary' : 'text-muted-foreground'
                 }`}
               >
-                <Icon className={`h-5 w-5 ${active ? 'scale-110' : ''} transition-transform`} />
+                <Icon
+                  className={`h-5 w-5 transition-transform duration-200 ${
+                    active ? 'scale-110' : ''
+                  }`}
+                />
                 <span>{item.label}</span>
               </Link>
             </li>

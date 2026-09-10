@@ -29,7 +29,9 @@ export function PageHeader({
     <header className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3">
         <div className="min-w-0">
-          <h1 className="truncate text-base font-semibold md:text-xl">{title}</h1>
+          <h1 className="truncate text-base font-semibold md:text-xl">
+            {title}
+          </h1>
           {subtitle && (
             <p className="truncate text-xs text-muted-foreground md:text-sm">
               {subtitle}
@@ -42,7 +44,7 @@ export function PageHeader({
           <Button
             variant="ghost"
             size="sm"
-            className="h-9 w-9 p-0 md:hidden"
+            className="tap h-9 w-9 p-0 md:hidden"
             onClick={handleLogout}
             aria-label="Se déconnecter"
           >
@@ -52,7 +54,7 @@ export function PageHeader({
             variant="outline"
             size="sm"
             onClick={handleLogout}
-            className="hidden md:inline-flex"
+            className="tap hidden md:inline-flex"
           >
             Se déconnecter
           </Button>

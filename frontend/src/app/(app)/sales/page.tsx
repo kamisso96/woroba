@@ -42,51 +42,54 @@ export default function SalesPage() {
           />
         )}
 
-        {sales && sales.length > 0 && (
+                {sales && sales.length > 0 && (
           <ul className="space-y-2">
-            {sales.map((s) => (
-              <li key={s.id}>
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium">
-                          {new Date(s.createdAt).toLocaleString('fr-FR', {
-                            dateStyle: 'medium',
-                            timeStyle: 'short',
-                          })}
-                        </p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">
-                          {s.saleItems.length} article
-                          {s.saleItems.length > 1 ? 's' : ''} ·{' '}
-                          {paymentMethodLabels[s.paymentMethod]}
-                        </p>
-                        <ul className="mt-2 space-y-0.5">
-                          {s.saleItems.slice(0, 3).map((item) => (
-                            <li
-                              key={item.id}
-                              className="truncate text-xs text-muted-foreground"
-                            >
-                              {item.quantity} × {item.product.name}
-                            </li>
-                          ))}
-                          {s.saleItems.length > 3 && (
-                            <li className="text-xs text-muted-foreground">
-                              … et {s.saleItems.length - 3} autres
-                            </li>
-                          )}
-                        </ul>
+            {sales.map((s, index) => {
+              const staggerClass = `stagger-${Math.min(index + 1, 10)}`;
+              return (
+                <li key={s.id} className={`animate-slide-up ${staggerClass}`}>
+                  <Card className="card-interactive">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium">
+                            {new Date(s.createdAt).toLocaleString('fr-FR', {
+                              dateStyle: 'medium',
+                              timeStyle: 'short',
+                            })}
+                          </p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">
+                            {s.saleItems.length} article
+                            {s.saleItems.length > 1 ? 's' : ''} ·{' '}
+                            {paymentMethodLabels[s.paymentMethod]}
+                          </p>
+                          <ul className="mt-2 space-y-0.5">
+                            {s.saleItems.slice(0, 3).map((item) => (
+                              <li
+                                key={item.id}
+                                className="truncate text-xs text-muted-foreground"
+                              >
+                                {item.quantity} × {item.product.name}
+                              </li>
+                            ))}
+                            {s.saleItems.length > 3 && (
+                              <li className="text-xs text-muted-foreground">
+                                … et {s.saleItems.length - 3} autres
+                              </li>
+                            )}
+                          </ul>
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <p className="text-base font-semibold">
+                            {formatPrice(s.totalAmount)}
+                          </p>
+                        </div>
                       </div>
-                      <div className="shrink-0 text-right">
-                        <p className="text-base font-semibold">
-                          {formatPrice(s.totalAmount)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </li>
-            ))}
+                    </CardContent>
+                  </Card>
+                </li>
+              );
+            })}
           </ul>
         )}
       </main>

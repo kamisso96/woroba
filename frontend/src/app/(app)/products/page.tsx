@@ -70,14 +70,15 @@ export default function ProductsPage() {
           />
         )}
 
-        {products && products.length > 0 && (
+                {products && products.length > 0 && (
           <ul className="space-y-2">
-            {products.map((p) => {
+            {products.map((p, index) => {
               const status = getStockStatus(p);
+              const staggerClass = `stagger-${Math.min(index + 1, 10)}`;
               return (
-                <li key={p.id}>
+                <li key={p.id} className={`animate-slide-up ${staggerClass}`}>
                   <Link href={`/products/${p.id}`}>
-                    <Card className="transition-all hover:border-primary/50 hover:shadow-sm">
+                    <Card className="card-interactive tap hover:border-primary/50 hover:shadow-sm">
                       <CardContent className="flex items-center justify-between gap-3 p-4">
                         <div className="min-w-0 flex-1">
                           <p className="truncate font-medium">{p.name}</p>
@@ -93,7 +94,7 @@ export default function ProductsPage() {
                           <p
                             className={`text-xs ${
                               status === 'out'
-                                ? 'text-destructive'
+                                ? 'animate-pulse-alert text-destructive'
                                 : status === 'low'
                                 ? 'text-amber-600 dark:text-amber-500'
                                 : 'text-muted-foreground'

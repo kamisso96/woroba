@@ -33,13 +33,17 @@ export function Sidebar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`tap flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
                     active
                       ? 'bg-primary/10 text-primary'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                      active ? 'scale-110' : ''
+                    }`}
+                  />
                   <span>{item.label}</span>
                 </Link>
               </li>
