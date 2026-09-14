@@ -32,8 +32,8 @@ const mainItems: NavItem[] = [
   { href: '/sales', label: 'Ventes', icon: ShoppingCart },
   { href: '/movements', label: 'Mouvements', icon: RefreshCw },
  { href: '/categories', label: 'Catégories', icon: Tag }, 
-  { href: '/suppliers', label: 'Fournisseurs', icon: Truck, soon: true },
-  { href: '/reports', label: 'Rapports', icon: BarChart3, soon: true },
+  { href: '/suppliers', label: 'Fournisseurs', icon: Truck },
+  { href: '/reports', label: 'Rapports', icon: BarChart3 },
 ];
 
 const bottomItems: NavItem[] = [
