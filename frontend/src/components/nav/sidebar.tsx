@@ -38,7 +38,7 @@ const mainItems: NavItem[] = [
 
 const bottomItems: NavItem[] = [
   { href: '/shops', label: 'Mes boutiques', icon: Store },
-  { href: '/settings', label: 'Paramètres', icon: Settings, soon: true },
+  { href: '/settings', label: 'Paramètres', icon: Settings },
   { href: '/help', label: 'Aide', icon: HelpCircle },
 ];
 
