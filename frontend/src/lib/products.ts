@@ -6,6 +6,7 @@ export type Category = {
   name: string;
   color: string | null;
   createdAt: string;
+  _count?: { products: number };
 };
 
 export type Product = {
@@ -72,6 +73,18 @@ export async function fetchCategories(): Promise<Category[]> {
 export async function createCategory(name: string, color?: string): Promise<Category> {
   const { data } = await api.post('/categories', { name, color });
   return data;
+}
+
+export async function updateCategory(
+  id: string,
+  input: { name?: string; color?: string },
+): Promise<Category> {
+  const { data } = await api.patch(`/categories/${id}`, input);
+  return data;
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  await api.delete(`/categories/${id}`);
 }
 
 export function formatPrice(value: string | number, currency = 'XOF'): string {

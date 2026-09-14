@@ -31,7 +31,7 @@ const mainItems: NavItem[] = [
   { href: '/products', label: 'Produits', icon: Package },
   { href: '/sales', label: 'Ventes', icon: ShoppingCart },
   { href: '/movements', label: 'Mouvements', icon: RefreshCw },
-  { href: '/categories', label: 'Catégories', icon: Tag, soon: true },
+ { href: '/categories', label: 'Catégories', icon: Tag }, 
   { href: '/suppliers', label: 'Fournisseurs', icon: Truck, soon: true },
   { href: '/reports', label: 'Rapports', icon: BarChart3, soon: true },
 ];
@@ -39,7 +39,7 @@ const mainItems: NavItem[] = [
 const bottomItems: NavItem[] = [
   { href: '/shops', label: 'Mes boutiques', icon: Store },
   { href: '/settings', label: 'Paramètres', icon: Settings, soon: true },
-  { href: '/help', label: 'Aide', icon: HelpCircle, soon: true },
+  { href: '/help', label: 'Aide', icon: HelpCircle },
 ];
 
 export function Sidebar() {
