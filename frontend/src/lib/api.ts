@@ -2,7 +2,9 @@ import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+
+export const SHOP_COOKIE = 'woroba_shop_id';
 
 export const api: AxiosInstance = axios.create({
   baseURL: API_URL,
@@ -15,6 +17,10 @@ api.interceptors.request.use((config) => {
   const token = Cookies.get('accessToken');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+  const shopId = Cookies.get(SHOP_COOKIE);
+  if (shopId && config.headers) {
+    config.headers['X-Shop-Id'] = shopId;
   }
   return config;
 });
@@ -38,6 +44,7 @@ async function refreshAccessToken(): Promise<string | null> {
     } catch {
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
+      Cookies.remove(SHOP_COOKIE);
       localStorage.removeItem('woroba_user');
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
@@ -60,7 +67,6 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as RetriedAxiosRequestConfig | undefined;
 
-    // Ne pas tenter de rafraichir si on est deja sur /auth/* ou si deja retente
     const url = originalRequest?.url ?? '';
     if (url.startsWith('/auth/')) {
       return Promise.reject(error);

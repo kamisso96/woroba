@@ -14,8 +14,10 @@ import {
   Settings,
   HelpCircle,
   LogOut,
+  Store,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
+import { ShopSelector } from './shop-selector';
 
 type NavItem = {
   href: string;
@@ -35,6 +37,7 @@ const mainItems: NavItem[] = [
 ];
 
 const bottomItems: NavItem[] = [
+  { href: '/shops', label: 'Mes boutiques', icon: Store },
   { href: '/settings', label: 'Paramètres', icon: Settings, soon: true },
   { href: '/help', label: 'Aide', icon: HelpCircle, soon: true },
 ];
@@ -53,7 +56,7 @@ export function Sidebar() {
   return (
     <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r bg-card md:flex md:flex-col">
       {/* Logo */}
-      <div className="shrink-0 p-6">
+      <div className="shrink-0 px-6 pt-6">
         <Link href="/dashboard" className="block">
           <h1 className="text-xl font-bold tracking-tight text-primary">
             Wôrôba
@@ -64,12 +67,17 @@ export function Sidebar() {
         </Link>
       </div>
 
+      {/* Selecteur de boutique */}
+      <div className="shrink-0 px-3 pb-2 pt-4">
+        <ShopSelector />
+      </div>
+
       {/* Navigation principale */}
-      <nav className="scrollbar-on-hover flex-1 overflow-y-auto px-3">
+      <nav className="scrollbar-on-hover flex-1 overflow-y-auto px-3 pt-2">
         <Section items={mainItems} pathname={pathname} />
       </nav>
 
-      {/* Section du bas : Paramètres, Aide + déconnexion */}
+      {/* Section du bas */}
       <div className="shrink-0 px-3 pb-3">
         <Section items={bottomItems} pathname={pathname} />
 

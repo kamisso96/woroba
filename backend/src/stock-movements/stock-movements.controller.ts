@@ -10,24 +10,30 @@ import {
 import { StockMovementsService } from './stock-movements.service';
 import { CreateMovementDto } from './dto/create-movement.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ShopAccessGuard } from '../shops/guards/shop-access.guard';
+import { CurrentShop } from '../shops/decorators/current-shop.decorator';
 import { MovementType } from '@prisma/client';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, ShopAccessGuard)
 @Controller('stock-movements')
 export class StockMovementsController {
   constructor(private readonly service: StockMovementsService) {}
 
   @Post()
-  create(@Req() req: any, @Body() dto: CreateMovementDto) {
-    return this.service.create(req.user.userId, dto);
+  create(
+    @Req() req: any,
+    @CurrentShop() shopId: string,
+    @Body() dto: CreateMovementDto,
+  ) {
+    return this.service.create(req.user.userId, shopId, dto);
   }
 
   @Get()
   findAll(
-    @Req() req: any,
+    @CurrentShop() shopId: string,
     @Query('productId') productId?: string,
     @Query('type') type?: MovementType,
   ) {
-    return this.service.findAll(req.user.userId, productId, type);
+    return this.service.findAll(shopId, productId, type);
   }
 }

@@ -11,25 +11,16 @@ import { MovementType } from '@prisma/client';
 export class StockMovementsService {
   constructor(private prisma: PrismaService) {}
 
-  private async getShopId(userId: string) {
-    const shop = await this.prisma.shop.findFirst({ where: { ownerId: userId } });
-    if (!shop) throw new NotFoundException('Boutique introuvable');
-    return shop.id;
-  }
-
-  async create(userId: string, dto: CreateMovementDto) {
-    const shopId = await this.getShopId(userId);
-
+  async create(userId: string, shopId: string, dto: CreateMovementDto) {
     const product = await this.prisma.product.findFirst({
       where: { id: dto.productId, shopId },
     });
     if (!product) throw new NotFoundException('Produit introuvable');
 
-    // Calcule la variation selon le type
     let change: number;
     if (dto.type === 'IN') change = dto.quantity;
     else if (dto.type === 'OUT') change = -dto.quantity;
-    else change = dto.quantity; // ADJUSTMENT : positif ou negatif selon signe du quantity
+    else change = dto.quantity;
 
     const newQuantity = product.quantity + change;
     if (newQuantity < 0) {
@@ -38,7 +29,6 @@ export class StockMovementsService {
       );
     }
 
-    // Transaction : creer le mouvement + mettre a jour le produit
     const [movement] = await this.prisma.$transaction([
       this.prisma.stockMovement.create({
         data: {
@@ -60,8 +50,7 @@ export class StockMovementsService {
     return movement;
   }
 
-  async findAll(userId: string, productId?: string, type?: MovementType) {
-    const shopId = await this.getShopId(userId);
+  async findAll(shopId: string, productId?: string, type?: MovementType) {
     return this.prisma.stockMovement.findMany({
       where: {
         shopId,

@@ -11,16 +11,7 @@ import { PaymentMethod } from '@prisma/client';
 export class SalesService {
   constructor(private prisma: PrismaService) {}
 
-  private async getShopId(userId: string) {
-    const shop = await this.prisma.shop.findFirst({ where: { ownerId: userId } });
-    if (!shop) throw new NotFoundException('Boutique introuvable');
-    return shop.id;
-  }
-
-  async create(userId: string, dto: CreateSaleDto) {
-    const shopId = await this.getShopId(userId);
-
-    // Recuperer tous les produits concernes
+  async create(userId: string, shopId: string, dto: CreateSaleDto) {
     const productIds = dto.items.map((i) => i.productId);
     const products = await this.prisma.product.findMany({
       where: { id: { in: productIds }, shopId },
@@ -30,7 +21,6 @@ export class SalesService {
       throw new NotFoundException('Un ou plusieurs produits sont introuvables');
     }
 
-    // Verifier le stock et calculer le total
     let total = 0;
     const saleItemsData: {
       productId: string;
@@ -58,7 +48,6 @@ export class SalesService {
       });
     }
 
-    // Transaction : creer la vente + items + mouvements + maj du stock
     const sale = await this.prisma.$transaction(async (tx) => {
       const created = await tx.sale.create({
         data: {
@@ -66,14 +55,11 @@ export class SalesService {
           sellerId: userId,
           totalAmount: total,
           paymentMethod: dto.paymentMethod ?? PaymentMethod.CASH,
-          saleItems: {
-            create: saleItemsData,
-          },
+          saleItems: { create: saleItemsData },
         },
         include: { saleItems: true },
       });
 
-      // Mettre a jour le stock et creer les mouvements
       for (const item of saleItemsData) {
         await tx.product.update({
           where: { id: item.productId },
@@ -99,8 +85,7 @@ export class SalesService {
     return sale;
   }
 
-  async findAll(userId: string) {
-    const shopId = await this.getShopId(userId);
+  async findAll(shopId: string) {
     return this.prisma.sale.findMany({
       where: { shopId },
       include: {
@@ -115,8 +100,7 @@ export class SalesService {
     });
   }
 
-  async findOne(userId: string, id: string) {
-    const shopId = await this.getShopId(userId);
+  async findOne(shopId: string, id: string) {
     const sale = await this.prisma.sale.findFirst({
       where: { id, shopId },
       include: {
