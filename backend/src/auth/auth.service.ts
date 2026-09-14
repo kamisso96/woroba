@@ -37,7 +37,7 @@ export class AuthService {
       data: {
         ownerId: user.id,
         name: 'Ma Boutique',
-        currency: 'EUR',
+        currency: 'XOF',
       },
     });
 

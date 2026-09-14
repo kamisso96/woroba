@@ -4,46 +4,50 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Mode clair — palette Woroba */
   --radius: 0.75rem;
-  --background: oklch(0.99 0.005 240);
-  --foreground: oklch(0.2 0.02 250);
+  --background: oklch(0.99 0.005 160);
+  --foreground: oklch(0.18 0.02 160);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 250);
+  --card-foreground: oklch(0.18 0.02 160);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 250);
-  --primary: oklch(0.55 0.17 250);        /* Bleu confiance */
+  --popover-foreground: oklch(0.18 0.02 160);
+  --primary: oklch(0.62 0.16 155);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.01 240);
-  --secondary-foreground: oklch(0.2 0.02 250);
-  --muted: oklch(0.96 0.01 240);
-  --muted-foreground: oklch(0.5 0.02 250);
-  --accent: oklch(0.7 0.17 150);          /* Vert croissance */
-  --accent-foreground: oklch(0.15 0.02 150);
-  --destructive: oklch(0.6 0.22 25);
-  --border: oklch(0.92 0.01 240);
-  --input: oklch(0.94 0.01 240);
-  --ring: oklch(0.55 0.17 250);
+  --secondary: oklch(0.96 0.01 160);
+  --secondary-foreground: oklch(0.18 0.02 160);
+  --muted: oklch(0.96 0.01 160);
+  --muted-foreground: oklch(0.5 0.02 160);
+  --accent: oklch(0.72 0.17 155);
+  --accent-foreground: oklch(0.15 0.02 155);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.92 0.01 160);
+  --input: oklch(0.94 0.01 160);
+  --ring: oklch(0.62 0.16 155);
 }
 
 .dark {
-  --background: oklch(0.15 0.02 250);
-  --foreground: oklch(0.98 0.005 240);
-  --card: oklch(0.2 0.02 250);
-  --card-foreground: oklch(0.98 0.005 240);
-  --popover: oklch(0.2 0.02 250);
-  --popover-foreground: oklch(0.98 0.005 240);
-  --primary: oklch(0.7 0.17 250);
-  --primary-foreground: oklch(0.15 0.02 250);
-  --secondary: oklch(0.25 0.02 250);
-  --secondary-foreground: oklch(0.98 0.005 240);
-  --muted: oklch(0.25 0.02 250);
-  --muted-foreground: oklch(0.7 0.02 240);
-  --accent: oklch(0.75 0.17 150);
-  --accent-foreground: oklch(0.15 0.02 250);
-  --destructive: oklch(0.7 0.22 25);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.7 0.17 250);
+  /* Mode sombre — palette vert émeraude (inspirée de la maquette) */
+  --background: oklch(0.16 0.015 160);
+  --foreground: oklch(0.97 0.005 160);
+  --card: oklch(0.20 0.015 160);
+  --card-foreground: oklch(0.97 0.005 160);
+  --popover: oklch(0.20 0.015 160);
+  --popover-foreground: oklch(0.97 0.005 160);
+  --primary: oklch(0.72 0.19 155);
+  --primary-foreground: oklch(0.13 0.02 160);
+  --secondary: oklch(0.24 0.015 160);
+  --secondary-foreground: oklch(0.97 0.005 160);
+  --muted: oklch(0.24 0.015 160);
+  --muted-foreground: oklch(0.65 0.02 160);
+  --accent: oklch(0.72 0.19 155);
+  --accent-foreground: oklch(0.13 0.02 160);
+  --destructive: oklch(0.65 0.22 25);
+  --destructive-foreground: oklch(0.97 0 0);
+  --border: oklch(0.28 0.02 160);
+  --input: oklch(0.26 0.02 160);
+  --ring: oklch(0.72 0.19 155);
 }
 
 @theme inline {
@@ -51,6 +55,8 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -60,6 +66,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -79,77 +86,39 @@
     font-family: var(--font-geist-sans), system-ui, sans-serif;
   }
 }
+
 /* ============================================
    Micro-animations Woroba
    ============================================ */
 
 @keyframes woroba-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes woroba-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes woroba-pop {
-  0% {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.03);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0% { transform: scale(0.9); opacity: 0; }
+  60% { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes woroba-pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 oklch(0.6 0.22 25 / 0.5);
-  }
-  70% {
-    box-shadow: 0 0 0 8px oklch(0.6 0.22 25 / 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 oklch(0.6 0.22 25 / 0);
-  }
+  0% { box-shadow: 0 0 0 0 oklch(0.6 0.22 25 / 0.5); }
+  70% { box-shadow: 0 0 0 8px oklch(0.6 0.22 25 / 0); }
+  100% { box-shadow: 0 0 0 0 oklch(0.6 0.22 25 / 0); }
 }
 
 @layer utilities {
-  .animate-fade-in {
-    animation: woroba-fade-in 0.3s ease-out both;
-  }
+  .animate-fade-in { animation: woroba-fade-in 0.3s ease-out both; }
+  .animate-slide-up { animation: woroba-slide-up 0.35s ease-out both; }
+  .animate-pop { animation: woroba-pop 0.25s ease-out both; }
+  .animate-pulse-alert { animation: woroba-pulse-ring 1.8s ease-out infinite; }
 
-  .animate-slide-up {
-    animation: woroba-slide-up 0.35s ease-out both;
-  }
-
-  .animate-pop {
-    animation: woroba-pop 0.25s ease-out both;
-  }
-
-  .animate-pulse-alert {
-    animation: woroba-pulse-ring 1.8s ease-out infinite;
-  }
-
-  /* Stagger : delai progressif pour les listes */
   .stagger-1 { animation-delay: 0.03s; }
   .stagger-2 { animation-delay: 0.06s; }
   .stagger-3 { animation-delay: 0.09s; }
@@ -161,28 +130,15 @@
   .stagger-9 { animation-delay: 0.27s; }
   .stagger-10 { animation-delay: 0.3s; }
 
-  /* Feedback de tap sur les elements interactifs */
-  .tap {
-    transition: transform 0.1s ease, opacity 0.1s ease;
-  }
-  .tap:active {
-    transform: scale(0.97);
-    opacity: 0.9;
-  }
+  .tap { transition: transform 0.1s ease, opacity 0.1s ease; }
+  .tap:active { transform: scale(0.97); opacity: 0.9; }
 
-  /* Petites transitions globales pour les cartes et inputs */
   .card-interactive {
-    transition: transform 0.15s ease, box-shadow 0.15s ease,
-      border-color 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   }
-  .card-interactive:hover {
-    transform: translateY(-1px);
-  }
-  .card-interactive:active {
-    transform: translateY(0);
-  }
+  .card-interactive:hover { transform: translateY(-1px); }
+  .card-interactive:active { transform: translateY(0); }
 
-  /* Desactive les animations pour ceux qui preferent */
   @media (prefers-reduced-motion: reduce) {
     .animate-fade-in,
     .animate-slide-up,
@@ -193,5 +149,60 @@
       animation: none !important;
       transition: none !important;
     }
+  }
+}
+
+/* ============================================
+   Barres de defilement personnalisees
+   ============================================ */
+
+/* Cache completement la barre (garde le scroll actif) */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE / Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome / Safari / Opera */
+  }
+
+  /* Barre ultra-fine, apparait au survol */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-muted-foreground);
+  }
+
+  /* Barre qui ne se montre qu'au survol du conteneur */
+  .scrollbar-on-hover {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .scrollbar-on-hover::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-on-hover::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+  }
+  .scrollbar-on-hover:hover {
+    scrollbar-color: var(--color-border) transparent;
+  }
+  .scrollbar-on-hover:hover::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
   }
 }

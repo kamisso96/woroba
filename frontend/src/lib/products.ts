@@ -74,11 +74,13 @@ export async function createCategory(name: string, color?: string): Promise<Cate
   return data;
 }
 
-export function formatPrice(value: string | number, currency = 'EUR'): string {
+export function formatPrice(value: string | number, currency = 'XOF'): string {
   const n = typeof value === 'string' ? parseFloat(value) : value;
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
     currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(n);
 }
 

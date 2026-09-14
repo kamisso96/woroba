@@ -24,7 +24,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased scrollbar-hide`}
+      >
         <ThemeProvider>
           <Providers>{children}</Providers>
         </ThemeProvider>
