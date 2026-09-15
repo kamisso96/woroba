@@ -41,3 +41,6 @@ backend/prisma/*.db-journal
 
 # Tests
 coverage/
+
+# Uploads (fichiers utilisateurs)
+backend/uploads/

@@ -34,6 +34,7 @@ export type ProductInput = {
   sku?: string;
   barcode?: string;
   description?: string;
+  imageUrl?: string;
   purchasePrice: number;
   sellingPrice: number;
   quantity: number;

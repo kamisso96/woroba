@@ -1,11 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { Tag } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { ImagePlus, Loader2, Tag, X } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { api, getImageUrl } from '@/lib/api';
 import { useCategories } from '@/lib/queries/use-products';
 import { ProductInput } from '@/lib/products';
 
@@ -38,12 +40,53 @@ export function ProductForm({
   );
   const [unit, setUnit] = useState(initial?.unit ?? 'piece');
   const [sku, setSku] = useState(initial?.sku ?? '');
+  const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? '');
+  const [uploading, setUploading] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { data } = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setImageUrl(data.url);
+      toast.success('Image ajoutée');
+    } catch (err: unknown) {
+      const message =
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err &&
+        typeof (err as { response?: { data?: { message?: string } } }).response
+          ?.data?.message === 'string'
+          ? (err as { response?: { data?: { message?: string } } }).response?.data
+              ?.message
+          : 'Échec de l\'upload de l\'image';
+
+      toast.error(message);
+    } finally {
+      setUploading(false);
+      // Reset l'input pour pouvoir reuploader le meme fichier
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }
+
+  function removeImage() {
+    setImageUrl('');
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onSubmit({
       name,
       categoryId: categoryId || undefined,
+      imageUrl: imageUrl || undefined,
       purchasePrice: parseFloat(purchasePrice) || 0,
       sellingPrice: parseFloat(sellingPrice) || 0,
       quantity: parseInt(quantity) || 0,
@@ -53,8 +96,77 @@ export function ProductForm({
     });
   }
 
+  const fullPreviewUrl = getImageUrl(imageUrl);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Image */}
+      <div className="space-y-2">
+        <Label>Photo du produit</Label>
+        <div className="flex items-center gap-4">
+          <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-xl border bg-muted/40">
+            {fullPreviewUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={fullPreviewUrl}
+                alt="Aperçu"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                <ImagePlus className="h-10 w-10" />
+              </div>
+            )}
+            {uploading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-1 flex-col gap-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={handleFileChange}
+              className="hidden"
+              id="product-image"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="tap w-fit"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+            >
+              <ImagePlus className="mr-2 h-4 w-4" />
+              {uploading
+                ? 'Envoi...'
+                : imageUrl
+                ? 'Changer l\'image'
+                : 'Choisir une image'}
+            </Button>
+            {imageUrl && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="tap w-fit text-destructive hover:text-destructive"
+                onClick={removeImage}
+              >
+                <X className="mr-2 h-4 w-4" />
+                Retirer l&apos;image
+              </Button>
+            )}
+            <p className="text-xs text-muted-foreground">
+              JPG, PNG, WEBP ou GIF · 5 Mo max
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="name">Nom du produit *</Label>
         <Input
@@ -63,10 +175,11 @@ export function ProductForm({
           onChange={(e) => setName(e.target.value)}
           placeholder="Ex : Coca-Cola 33cl"
           required
+          className="h-11"
         />
       </div>
 
-      {/* Categorie */}
+      {/* Catégorie */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="categoryId" className="flex items-center gap-1.5">
@@ -93,18 +206,6 @@ export function ProductForm({
             </option>
           ))}
         </select>
-        {categories && categories.length === 0 && (
-          <p className="text-xs text-muted-foreground">
-            Aucune catégorie pour l&apos;instant.{' '}
-            <Link
-              href="/categories"
-              className="font-medium text-primary hover:underline"
-            >
-              Créez-en une
-            </Link>
-            .
-          </p>
-        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -117,6 +218,7 @@ export function ProductForm({
             min="0"
             value={purchasePrice}
             onChange={(e) => setPurchasePrice(e.target.value)}
+            className="h-11"
           />
         </div>
         <div className="space-y-2">
@@ -128,6 +230,7 @@ export function ProductForm({
             min="0"
             value={sellingPrice}
             onChange={(e) => setSellingPrice(e.target.value)}
+            className="h-11"
           />
         </div>
       </div>
@@ -141,6 +244,7 @@ export function ProductForm({
             min="0"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            className="h-11"
           />
         </div>
         <div className="space-y-2">
@@ -151,6 +255,7 @@ export function ProductForm({
             min="0"
             value={alertThreshold}
             onChange={(e) => setAlertThreshold(e.target.value)}
+            className="h-11"
           />
         </div>
       </div>
@@ -178,11 +283,16 @@ export function ProductForm({
             value={sku}
             onChange={(e) => setSku(e.target.value)}
             placeholder="Ex : COCA33"
+            className="h-11"
           />
         </div>
       </div>
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button
+        type="submit"
+        className="tap h-11 w-full"
+        disabled={loading || uploading}
+      >
         {loading ? 'Enregistrement...' : submitLabel}
       </Button>
     </form>

@@ -119,6 +119,7 @@ export default function ProductDetailPage({
               initial={{
                 name: product.name,
                 categoryId: product.categoryId ?? '',
+                imageUrl: product.imageUrl ?? '',
                 purchasePrice: parseFloat(product.purchasePrice),
                 sellingPrice: parseFloat(product.sellingPrice),
                 quantity: product.quantity,

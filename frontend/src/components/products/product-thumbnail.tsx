@@ -1,3 +1,5 @@
+import { getImageUrl } from '@/lib/api';
+
 export function ProductThumbnail({
   name,
   imageUrl,
@@ -5,22 +7,28 @@ export function ProductThumbnail({
 }: {
   name: string;
   imageUrl?: string | null;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
 }) {
-  const sizeClass = size === 'sm' ? 'h-8 w-8 text-[10px]' : 'h-10 w-10 text-xs';
+  const sizeClass =
+    size === 'sm'
+      ? 'h-8 w-8 text-[10px]'
+      : size === 'lg'
+      ? 'h-14 w-14 text-sm'
+      : 'h-10 w-10 text-xs';
 
-  if (imageUrl) {
+  const fullUrl = getImageUrl(imageUrl);
+
+  if (fullUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={imageUrl}
+        src={fullUrl}
         alt={name}
         className={`${sizeClass} shrink-0 rounded-lg object-cover`}
       />
     );
   }
 
-  // Initiales + couleur déterminée par hash du nom
   const initials = name
     .split(' ')
     .map((w) => w[0])

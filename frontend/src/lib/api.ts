@@ -92,3 +92,14 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+/**
+ * Convertit un chemin relatif (/uploads/xxx.jpg) en URL absolue
+ * utilisable par <img src="..." />.
+ */
+export function getImageUrl(path: string | null | undefined): string | null {
+  if (!path) return null;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const base = API_URL.replace('/api/v1', '');
+  return `${base}${path}`;
+}
