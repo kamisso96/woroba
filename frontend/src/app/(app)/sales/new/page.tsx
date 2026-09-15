@@ -5,7 +5,7 @@ export default function NewSalePage() {
   return (
     <>
       <PageHeader title="Nouvelle vente" subtitle="Ajoutez des produits au panier" />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
+      <main className="w-full flex-1 px-4 py-6">
         <SaleCart />
       </main>
     </>

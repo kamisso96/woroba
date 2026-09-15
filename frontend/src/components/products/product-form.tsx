@@ -1,9 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
+import { Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useCategories } from '@/lib/queries/use-products';
 import { ProductInput } from '@/lib/products';
 
 const units = ['piece', 'kg', 'g', 'litre', 'ml', 'paquet', 'carton'];
@@ -19,7 +22,10 @@ export function ProductForm({
   submitLabel?: string;
   loading?: boolean;
 }) {
+  const { data: categories } = useCategories();
+
   const [name, setName] = useState(initial?.name ?? '');
+  const [categoryId, setCategoryId] = useState(initial?.categoryId ?? '');
   const [purchasePrice, setPurchasePrice] = useState(
     initial?.purchasePrice?.toString() ?? '0',
   );
@@ -37,6 +43,7 @@ export function ProductForm({
     e.preventDefault();
     onSubmit({
       name,
+      categoryId: categoryId || undefined,
       purchasePrice: parseFloat(purchasePrice) || 0,
       sellingPrice: parseFloat(sellingPrice) || 0,
       quantity: parseInt(quantity) || 0,
@@ -57,6 +64,47 @@ export function ProductForm({
           placeholder="Ex : Coca-Cola 33cl"
           required
         />
+      </div>
+
+      {/* Categorie */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="categoryId" className="flex items-center gap-1.5">
+            <Tag className="h-3.5 w-3.5" />
+            Catégorie
+          </Label>
+          <Link
+            href="/categories"
+            className="text-xs text-muted-foreground hover:text-primary"
+          >
+            Gérer les catégories
+          </Link>
+        </div>
+        <select
+          id="categoryId"
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+          className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm outline-none transition-colors focus:border-primary/60"
+        >
+          <option value="">Sans catégorie</option>
+          {categories?.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        {categories && categories.length === 0 && (
+          <p className="text-xs text-muted-foreground">
+            Aucune catégorie pour l&apos;instant.{' '}
+            <Link
+              href="/categories"
+              className="font-medium text-primary hover:underline"
+            >
+              Créez-en une
+            </Link>
+            .
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -86,7 +134,7 @@ export function ProductForm({
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <Label htmlFor="quantity">Quantite en stock</Label>
+          <Label htmlFor="quantity">Quantité en stock</Label>
           <Input
             id="quantity"
             type="number"
@@ -109,12 +157,12 @@ export function ProductForm({
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <Label htmlFor="unit">Unite</Label>
+          <Label htmlFor="unit">Unité</Label>
           <select
             id="unit"
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+            className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm outline-none transition-colors focus:border-primary/60"
           >
             {units.map((u) => (
               <option key={u} value={u}>

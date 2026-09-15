@@ -33,7 +33,7 @@ export default function NewProductPage() {
   return (
     <>
       <PageHeader title="Nouveau produit" subtitle="Ajouter au catalogue" />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
         <Card>
           <CardHeader>
             <CardTitle>Informations du produit</CardTitle>

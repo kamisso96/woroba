@@ -40,19 +40,19 @@ export function DisplayCard() {
           </div>
           <div className="grid shrink-0 grid-cols-3 gap-1">
             <ThemeBtn
-              icon={<Sun className="h-4 w-4" />}
+              icon={<Sun className="h-6 w-6" />}
               active={theme === 'light'}
               onClick={() => setTheme('light')}
               label="Clair"
             />
             <ThemeBtn
-              icon={<Moon className="h-4 w-4" />}
+              icon={<Moon className="h-6 w-6" />}
               active={theme === 'dark'}
               onClick={() => setTheme('dark')}
               label="Sombre"
             />
             <ThemeBtn
-              icon={<Monitor className="h-4 w-4" />}
+              icon={<Monitor className="h-6 w-6" />}
               active={theme === 'system'}
               onClick={() => setTheme('system')}
               label="Auto"

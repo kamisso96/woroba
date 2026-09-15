@@ -33,7 +33,7 @@ export default function ProductsPage() {
         }
       />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 space-y-4 px-4 py-6">
+      <main className="w-full flex-1 space-y-6 px-6 py-8 lg:px-8">
         {/* Barre de recherche */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

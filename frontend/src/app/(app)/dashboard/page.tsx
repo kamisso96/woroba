@@ -119,7 +119,7 @@ export default function DashboardPage() {
     <>
       <PageHeader />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 space-y-4 px-4 py-6">
+      <main className="w-full flex-1 space-y-6 px-6 py-8 lg:px-8">
         {/* Titre + bouton Vendre */}
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">

@@ -25,7 +25,7 @@ export default function CategoriesPage() {
     <>
       <PageHeader />
 
-      <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-6">
+      <main className="w-full flex-1 space-y-6 px-6 py-8 lg:px-8">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl">

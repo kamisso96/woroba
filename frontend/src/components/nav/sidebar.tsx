@@ -31,7 +31,7 @@ const mainItems: NavItem[] = [
   { href: '/products', label: 'Produits', icon: Package },
   { href: '/sales', label: 'Ventes', icon: ShoppingCart },
   { href: '/movements', label: 'Mouvements', icon: RefreshCw },
- { href: '/categories', label: 'Catégories', icon: Tag }, 
+  { href: '/categories', label: 'Catégories', icon: Tag },
   { href: '/suppliers', label: 'Fournisseurs', icon: Truck },
   { href: '/reports', label: 'Rapports', icon: BarChart3 },
 ];
@@ -54,26 +54,26 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 border-r bg-card md:flex md:flex-col">
+    <aside className="sticky top-0 hidden h-screen w-72 shrink-0 bg-card md:flex md:flex-col">
       {/* Logo */}
       <div className="shrink-0 px-6 pt-6">
         <Link href="/dashboard" className="block">
-          <h1 className="text-xl font-bold tracking-tight text-primary">
+          <h1 className="text-[28px] font-bold tracking-tight text-primary">
             Wôrôba
           </h1>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             Gestion de stock
           </p>
         </Link>
       </div>
 
       {/* Selecteur de boutique */}
-      <div className="shrink-0 px-3 pb-2 pt-4">
+      <div className="shrink-0 px-3 pb-3 pt-5">
         <ShopSelector />
       </div>
 
       {/* Navigation principale */}
-      <nav className="scrollbar-on-hover flex-1 overflow-y-auto px-3 pt-2">
+      <nav className="scrollbar-on-hover flex-1 overflow-y-auto px-3 pt-3">
         <Section items={mainItems} pathname={pathname} />
       </nav>
 
@@ -83,9 +83,9 @@ export function Sidebar() {
 
         <button
           onClick={handleLogout}
-          className="tap mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+          className="tap mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-5 w-5" />
           <span>Déconnexion</span>
         </button>
       </div>
@@ -101,15 +101,15 @@ function Section({
   pathname: string;
 }) {
   return (
-    <ul className="space-y-1">
+    <ul className="space-y-1.5">
       {items.map((item) => {
         const active = pathname.startsWith(item.href);
         const Icon = item.icon;
         return (
           <li key={item.href}>
             {item.soon ? (
-              <div className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground/50">
-                <Icon className="h-4 w-4" />
+              <div className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium text-muted-foreground/50">
+                <Icon className="h-5 w-5" />
                 <span>{item.label}</span>
                 <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide">
                   Bientôt
@@ -118,14 +118,14 @@ function Section({
             ) : (
               <Link
                 href={item.href}
-                className={`tap flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                className={`tap flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium transition-all duration-200 ${
                   active
                     ? 'bg-primary/15 text-primary'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
                 <Icon
-                  className={`h-4 w-4 transition-transform duration-200 ${
+                  className={`h-5 w-5 transition-transform duration-200 ${
                     active ? 'scale-110' : ''
                   }`}
                 />

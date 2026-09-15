@@ -105,7 +105,7 @@ export default function ProductDetailPage({
   return (
     <>
       <PageHeader title={product.name} subtitle="Detail du produit" />
-      <main className="mx-auto w-full max-w-2xl flex-1 space-y-4 px-4 py-6">
+      <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-6 py-8 lg:px-8">
         <div className="flex flex-wrap gap-2">
           <MovementDialog productId={id} label="Entree / Sortie" />
         </div>
@@ -118,6 +118,7 @@ export default function ProductDetailPage({
             <ProductForm
               initial={{
                 name: product.name,
+                categoryId: product.categoryId ?? '',
                 purchasePrice: parseFloat(product.purchasePrice),
                 sellingPrice: parseFloat(product.sellingPrice),
                 quantity: product.quantity,

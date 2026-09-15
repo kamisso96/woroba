@@ -31,15 +31,15 @@ export function PageHeader(_props: {
     : '?';
 
   return (
-    <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+    <header className="sticky top-0 z-30 bg-card">
+      <div className="flex items-center gap-3 px-6 py-5 lg:px-8">
         {/* Recherche */}
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
             placeholder="Rechercher un produit, une vente..."
-            className="h-9 w-full rounded-lg border border-input bg-background/60 pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/60 focus:bg-background"
+            className="h-10 w-full rounded-lg border border-input bg-background/60 pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/60 focus:bg-background"
           />
         </div>
 
@@ -47,10 +47,10 @@ export function PageHeader(_props: {
         <Button
           variant="ghost"
           size="sm"
-          className="tap relative h-9 w-9 shrink-0 p-0"
+          className="tap relative h-10 w-10 shrink-0 p-0"
           aria-label="Notifications"
         >
-          <Bell className="h-4 w-4" />
+          <Bell className="h-6 w-6" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
         </Button>
 
@@ -93,7 +93,7 @@ function UserMenu({
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="tap ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/25"
+        className="tap ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/25"
         aria-label="Menu utilisateur"
         aria-expanded={open}
       >
@@ -128,19 +128,19 @@ function UserMenu({
             <div className="grid grid-cols-3 gap-1.5">
               <ThemeButton
                 label="Clair"
-                icon={<Sun className="h-4 w-4" />}
+                icon={<Sun className="h-6 w-6" />}
                 active={theme === 'light'}
                 onClick={() => setTheme('light')}
               />
               <ThemeButton
                 label="Sombre"
-                icon={<Moon className="h-4 w-4" />}
+                icon={<Moon className="h-6 w-6" />}
                 active={theme === 'dark'}
                 onClick={() => setTheme('dark')}
               />
               <ThemeButton
                 label="Auto"
-                icon={<Monitor className="h-4 w-4" />}
+                icon={<Monitor className="h-6 w-6" />}
                 active={theme === 'system'}
                 onClick={() => setTheme('system')}
               />

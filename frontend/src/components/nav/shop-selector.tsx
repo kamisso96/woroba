@@ -24,9 +24,9 @@ export function ShopSelector() {
     return (
       <Link
         href="/shops/new"
-        className="tap flex items-center gap-2 rounded-lg border border-dashed border-input px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+        className="tap flex items-center gap-2.5 rounded-lg border border-dashed border-input px-3 py-3 text-[15px] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
       >
-        <Plus className="h-4 w-4" />
+        <Plus className="h-5 w-5" />
         <span>Ajouter une boutique</span>
       </Link>
     );
@@ -45,22 +45,22 @@ export function ShopSelector() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="tap flex w-full items-center gap-2 rounded-lg border bg-background/60 px-2.5 py-2 text-left transition-colors hover:border-primary/50"
+        className="tap flex w-full items-center gap-3 rounded-lg border bg-background/60 px-3 py-3 text-left transition-colors hover:border-primary/50"
         aria-expanded={open}
       >
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/15 text-[10px] font-semibold text-primary">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/15 text-sm font-semibold text-primary">
           {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold">
+          <p className="truncate text-[15px] font-semibold">
             {activeShop?.name ?? 'Boutique'}
           </p>
-          <p className="truncate text-[10px] text-muted-foreground">
+          <p className="truncate text-xs text-muted-foreground">
             {activeShop?.currency ?? ''}
           </p>
         </div>
         <ChevronDown
-          className={`h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform ${
+          className={`h-4.5 w-4.5 shrink-0 text-muted-foreground transition-transform ${
             open ? 'rotate-180' : ''
           }`}
         />
@@ -68,7 +68,7 @@ export function ShopSelector() {
 
       {open && (
         <div className="animate-fade-in absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-lg border bg-card shadow-lg">
-          <p className="border-b px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <p className="border-b px-3 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Mes boutiques
           </p>
 
@@ -82,13 +82,13 @@ export function ShopSelector() {
                       setActiveShop(s.id);
                       setOpen(false);
                     }}
-                    className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-muted ${
+                    className={`flex w-full items-center gap-3 px-3 py-2.5 text-left text-[15px] transition-colors hover:bg-muted ${
                       active ? 'text-primary' : 'text-foreground'
                     }`}
                   >
-                    <Store className="h-3.5 w-3.5 shrink-0" />
+                    <Store className="h-4.5 w-4.5 shrink-0" />
                     <span className="min-w-0 flex-1 truncate">{s.name}</span>
-                    {active && <Check className="h-3.5 w-3.5 shrink-0" />}
+                    {active && <Check className="h-4.5 w-4.5 shrink-0" />}
                   </button>
                 </li>
               );
@@ -99,9 +99,9 @@ export function ShopSelector() {
             <Link
               href="/shops"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="flex items-center gap-3 px-3 py-2.5 text-[15px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              <Settings className="h-3.5 w-3.5" />
+              <Settings className="h-4.5 w-4.5" />
               <span>Gérer mes boutiques</span>
             </Link>
           </div>

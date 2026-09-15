@@ -6,9 +6,9 @@
 :root {
   /* Mode clair — palette Woroba */
   --radius: 0.75rem;
-  --background: oklch(0.99 0.005 160);
+  --background: oklch(0.96 0.008 160);   /* fond global légèrement grisé */
   --foreground: oklch(0.18 0.02 160);
-  --card: oklch(1 0 0);
+  --card: oklch(1 0 0);                   /* sidebar + header : blanc pur */
   --card-foreground: oklch(0.18 0.02 160);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.02 160);
@@ -16,7 +16,7 @@
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.96 0.01 160);
   --secondary-foreground: oklch(0.18 0.02 160);
-  --muted: oklch(0.96 0.01 160);
+  --muted: oklch(0.94 0.01 160);
   --muted-foreground: oklch(0.5 0.02 160);
   --accent: oklch(0.72 0.17 155);
   --accent-foreground: oklch(0.15 0.02 155);
@@ -28,10 +28,10 @@
 }
 
 .dark {
-  /* Mode sombre — palette vert émeraude (inspirée de la maquette) */
-  --background: oklch(0.16 0.015 160);
+  /* Mode sombre — palette vert émeraude */
+  --background: oklch(0.14 0.015 160);   /* fond global plus sombre */
   --foreground: oklch(0.97 0.005 160);
-  --card: oklch(0.20 0.015 160);
+  --card: oklch(0.20 0.015 160);         /* sidebar + header : plus clair */
   --card-foreground: oklch(0.97 0.005 160);
   --popover: oklch(0.20 0.015 160);
   --popover-foreground: oklch(0.97 0.005 160);
@@ -204,5 +204,26 @@
   }
   .scrollbar-on-hover:hover::-webkit-scrollbar-thumb {
     background-color: var(--color-border);
+  }
+}
+
+/* ============================================
+   Selects natifs (options) — compatible dark mode
+   ============================================ */
+@layer base {
+  select {
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+  }
+
+  select option {
+    background-color: var(--color-card);
+    color: var(--color-card-foreground);
+  }
+
+  /* Certains navigateurs (Chrome/Edge) ont besoin du --card directement */
+  .dark select option {
+    background-color: var(--card);
+    color: var(--card-foreground);
   }
 }

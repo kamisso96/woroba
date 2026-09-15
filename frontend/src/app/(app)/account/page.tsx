@@ -22,7 +22,7 @@ export default function AccountPage() {
     <>
       <PageHeader />
 
-      <main className="mx-auto w-full max-w-3xl flex-1 space-y-4 px-4 py-6">
+      <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-6 py-8 lg:px-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
             Mon compte

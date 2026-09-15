@@ -64,7 +64,7 @@ export default function ReportsPage() {
     <>
       <PageHeader />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 space-y-4 px-4 py-6">
+      <main className="w-full flex-1 space-y-6 px-6 py-8 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
