@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import {
   useShop,
   useUpdateShop,
 } from '@/lib/queries/use-shops';
+import { useShopContext } from '@/lib/shop-context';
 import { currencies } from '@/lib/shops';
 
 export function ShopFormDialog({
@@ -35,6 +37,9 @@ export function ShopFormDialog({
   const { data: shop } = useShop(shopId ?? '');
   const create = useCreateShop();
   const update = useUpdateShop(shopId ?? '');
+  const { refreshShops, setActiveShop } = useShopContext();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [name, setName] = useState('');
   const [currency, setCurrency] = useState('XOF');
@@ -75,12 +80,20 @@ export function ShopFormDialog({
       if (isEdit && shopId) {
         await update.mutateAsync({ name, currency, address });
         toast.success('Boutique mise à jour');
+        onSuccess?.();
+        onOpenChange(false);
       } else {
-        await create.mutateAsync({ name, currency, address });
+        const created = await create.mutateAsync({ name, currency, address });
         toast.success('Boutique créée');
+        await refreshShops();
+        setActiveShop(created.id);
+        onSuccess?.();
+        onOpenChange(false);
+        // Rediriger vers la liste des boutiques si on n'y est pas deja
+        if (pathname !== '/shops') {
+          router.push('/shops');
+        }
       }
-      onSuccess?.();
-      onOpenChange(false);
     } catch (err: unknown) {
       const message =
         typeof err === 'object' &&

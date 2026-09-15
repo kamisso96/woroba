@@ -21,9 +21,9 @@ export default function NewProductPage() {
 
   async function handleSubmit(input: CreateProductInput) {
     try {
-      const product = await create.mutateAsync(input);
-      toast.success('Produit ajoute');
-      router.push(`/products/${product.id}`);
+      await create.mutateAsync(input);
+      toast.success('Produit ajouté');
+      router.push('/products');
     } catch (err: unknown) {
       const error = err as ApiError;
       toast.error(error.response?.data?.message || 'Erreur lors de l\'ajout');
@@ -32,8 +32,16 @@ export default function NewProductPage() {
 
   return (
     <>
-      <PageHeader title="Nouveau produit" subtitle="Ajouter au catalogue" />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
+      <PageHeader />
+      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8 lg:px-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+            Nouveau produit
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Ajouter un produit à votre catalogue.
+          </p>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Informations du produit</CardTitle>

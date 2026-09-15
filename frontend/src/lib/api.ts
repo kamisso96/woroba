@@ -33,7 +33,16 @@ async function refreshAccessToken(): Promise<string | null> {
 
   refreshPromise = (async () => {
     const refreshToken = Cookies.get('refreshToken');
-    if (!refreshToken) return null;
+    if (!refreshToken) {
+      // Pas de refresh token → deconnexion forcee
+      Cookies.remove('accessToken');
+      Cookies.remove(SHOP_COOKIE);
+      localStorage.removeItem('woroba_user');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+      return null;
+    }
     try {
       const { data } = await axios.post(`${API_URL}/auth/refresh`, {
         refreshToken,

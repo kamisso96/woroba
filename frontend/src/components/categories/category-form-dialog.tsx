@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -20,14 +21,14 @@ import {
 import { Category } from '@/lib/products';
 
 const colorPalette = [
-  '#10b981', // emerald
-  '#3b82f6', // blue
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#ef4444', // red
-  '#f59e0b', // amber
-  '#14b8a6', // teal
-  '#64748b', // slate
+  '#10b981',
+  '#3b82f6',
+  '#8b5cf6',
+  '#ec4899',
+  '#ef4444',
+  '#f59e0b',
+  '#14b8a6',
+  '#64748b',
 ];
 
 export function CategoryFormDialog({
@@ -44,6 +45,8 @@ export function CategoryFormDialog({
   const isEdit = !!category;
   const create = useCreateCategory();
   const update = useUpdateCategory();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [name, setName] = useState('');
   const [color, setColor] = useState(colorPalette[0]);
@@ -81,6 +84,10 @@ export function CategoryFormDialog({
       }
       onSuccess?.();
       onOpenChange(false);
+      // Si on n'est pas sur /categories, y rediriger
+      if (pathname !== '/categories') {
+        router.push('/categories');
+      }
     } catch (err: unknown) {
       const apiError = err as {
         response?: {
@@ -157,11 +164,7 @@ export function CategoryFormDialog({
             >
               Annuler
             </Button>
-            <Button
-              type="submit"
-              className="tap flex-1"
-              disabled={pending}
-            >
+            <Button type="submit" className="tap flex-1" disabled={pending}>
               {pending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

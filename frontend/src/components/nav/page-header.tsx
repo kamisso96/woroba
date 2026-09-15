@@ -33,8 +33,8 @@ export function PageHeader(_props: {
   return (
     <header className="sticky top-0 z-30 bg-card">
       <div className="flex items-center gap-3 px-6 py-5 lg:px-8">
-        {/* Recherche */}
-        <div className="relative flex-1">
+        {/* Recherche — limitée à gauche */}
+        <div className="relative w-full max-w-md">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
@@ -43,6 +43,9 @@ export function PageHeader(_props: {
           />
         </div>
 
+        {/* Spacer — pousse les icônes à droite */}
+        <div className="flex-1" />
+
         {/* Notifications */}
         <Button
           variant="ghost"
@@ -50,7 +53,7 @@ export function PageHeader(_props: {
           className="tap relative h-10 w-10 shrink-0 p-0"
           aria-label="Notifications"
         >
-          <Bell className="h-6 w-6" />
+          <Bell className="h-5 w-5" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
         </Button>
 
@@ -93,7 +96,7 @@ function UserMenu({
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="tap ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/25"
+        className="tap flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/25"
         aria-label="Menu utilisateur"
         aria-expanded={open}
       >
@@ -128,19 +131,19 @@ function UserMenu({
             <div className="grid grid-cols-3 gap-1.5">
               <ThemeButton
                 label="Clair"
-                icon={<Sun className="h-6 w-6" />}
+                icon={<Sun className="h-5 w-5" />}
                 active={theme === 'light'}
                 onClick={() => setTheme('light')}
               />
               <ThemeButton
                 label="Sombre"
-                icon={<Moon className="h-6 w-6" />}
+                icon={<Moon className="h-5 w-5" />}
                 active={theme === 'dark'}
                 onClick={() => setTheme('dark')}
               />
               <ThemeButton
                 label="Auto"
-                icon={<Monitor className="h-6 w-6" />}
+                icon={<Monitor className="h-5 w-5" />}
                 active={theme === 'system'}
                 onClick={() => setTheme('system')}
               />

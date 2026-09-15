@@ -95,7 +95,7 @@ export class AuthService {
   private async generateTokens(userId: string, email: string) {
     const accessToken = this.jwtService.sign(
       { sub: userId, email },
-      { expiresIn: '15m' },
+      { expiresIn: '1h' },
     );
 
     const refreshToken = randomUUID();
