@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PageHeader } from '@/components/nav/page-header';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ListSkeleton } from '@/components/ui/loading-skeleton';
+import { ExportButton } from '@/components/ui/export-button';
 import { useMovements } from '@/lib/queries/use-movements';
 import { MovementType } from '@/lib/movements';
 
@@ -24,11 +25,25 @@ export default function MovementsPage() {
 
   return (
     <>
-      <PageHeader
-        title="Mouvements"
-        subtitle="Historique des entrées et sorties"
-      />
+      <PageHeader />
+
       <main className="w-full flex-1 space-y-6 px-6 py-8 lg:px-8">
+        {/* Titre + actions */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+              Mouvements
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Historique des entrées et sorties.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <ExportButton type="movements" />
+          </div>
+        </div>
+
+        {/* Filtres */}
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
             <button
@@ -55,12 +70,16 @@ export default function MovementsPage() {
           />
         )}
 
-                {movements && movements.length > 0 && (
+        {movements && movements.length > 0 && (
           <ul className="space-y-2">
             {movements.map((m, index) => {
               const isIn = m.type === 'IN';
               const isAdj = m.type === 'ADJUSTMENT';
-              const Icon = isAdj ? RefreshCw : isIn ? ArrowDownCircle : ArrowUpCircle;
+              const Icon = isAdj
+                ? RefreshCw
+                : isIn
+                ? ArrowDownCircle
+                : ArrowUpCircle;
               const staggerClass = `stagger-${Math.min(index + 1, 10)}`;
               return (
                 <li key={m.id} className={`animate-slide-up ${staggerClass}`}>
@@ -81,7 +100,11 @@ export default function MovementsPage() {
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {m.reason ||
-                            (isIn ? 'Entrée' : isAdj ? 'Ajustement' : 'Sortie')}{' '}
+                            (isIn
+                              ? 'Entrée'
+                              : isAdj
+                              ? 'Ajustement'
+                              : 'Sortie')}{' '}
                           · {new Date(m.createdAt).toLocaleDateString('fr-FR')}
                         </p>
                       </div>

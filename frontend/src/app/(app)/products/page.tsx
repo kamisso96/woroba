@@ -4,15 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import {
-  MoreVertical,
-  Package,
-  Pencil,
-  Plus,
-  RefreshCw,
-  Search,
-  Trash2,
-} from 'lucide-react';
+import { MoreVertical, Package, Pencil, Plus, RefreshCw, Search, Trash2, } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,6 +17,7 @@ import { useProducts, useDeleteProduct } from '@/lib/queries/use-products';
 import { useShopContext } from '@/lib/shop-context';
 import { formatPrice, getStockStatus } from '@/lib/products';
 import { toast } from 'sonner';
+import { ExportButton } from '@/components/ui/export-button';
 
 type ProductRequestError = {
   response?: {
@@ -63,7 +56,7 @@ export default function ProductsPage() {
       <PageHeader />
 
       <main className="w-full flex-1 space-y-6 px-6 py-8 lg:px-8">
-        {/* Titre + actions */}
+                {/* Titre + actions */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
@@ -73,12 +66,15 @@ export default function ProductsPage() {
               Gérez votre catalogue de produits.
             </p>
           </div>
-          <Link href="/products/new" className="shrink-0">
-            <Button className="tap">
-              <Plus className="mr-2 h-4 w-4" />
-              Ajouter un produit
-            </Button>
-          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            <ExportButton type="products" />
+            <Link href="/products/new">
+              <Button className="tap">
+                <Plus className="mr-2 h-4 w-4" />
+                Ajouter un produit
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Recherche */}

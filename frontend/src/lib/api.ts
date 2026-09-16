@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
 export const SHOP_COOKIE = 'woroba_shop_id';
 
