@@ -14,16 +14,7 @@ import {
   useProduct,
   useUpdateProduct,
 } from '@/lib/queries/use-products';
-
-type ProductFormValues = {
-  name: string;
-  purchasePrice: number;
-  sellingPrice: number;
-  quantity: number;
-  alertThreshold: number;
-  unit: string;
-  sku?: string;
-};
+import { ProductInput } from '@/lib/products';
 
 function getApiErrorMessage(err: unknown): string {
   if (typeof err === 'object' && err !== null) {
@@ -83,10 +74,11 @@ export default function ProductDetailPage({
     );
   }
 
-  async function handleUpdate(input: ProductFormValues) {
+  async function handleUpdate(input: ProductInput) {
     try {
       await update.mutateAsync(input);
-      toast.success('Produit mis a jour');
+      toast.success('Produit mis à jour');
+      router.push('/products');
     } catch (err: unknown) {
       toast.error(getApiErrorMessage(err));
     }
@@ -95,7 +87,7 @@ export default function ProductDetailPage({
   async function handleDelete() {
     try {
       await remove.mutateAsync(id);
-      toast.success('Produit supprime');
+      toast.success('Produit supprimé');
       router.push('/products');
     } catch (err: unknown) {
       toast.error(getApiErrorMessage(err));
@@ -104,10 +96,10 @@ export default function ProductDetailPage({
 
   return (
     <>
-      <PageHeader title={product.name} subtitle="Detail du produit" />
+      <PageHeader title={product.name} subtitle="Détail du produit" />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-6 py-8 lg:px-8">
         <div className="flex flex-wrap gap-2">
-          <MovementDialog productId={id} label="Entree / Sortie" />
+          <MovementDialog productId={id} label="Entrée / Sortie" />
         </div>
 
         <Card>
@@ -139,7 +131,7 @@ export default function ProductDetailPage({
             <div>
               <p className="text-sm font-medium">Supprimer ce produit</p>
               <p className="text-xs text-muted-foreground">
-                Cette action est definitive.
+                Cette action est définitive.
               </p>
             </div>
             {confirming ? (
