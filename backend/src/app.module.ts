@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { ShopsModule } from './shops/shops.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { UploadsModule } from './uploads/uploads.module';
+import { ExportModule } from './export/export.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { UploadsModule } from './uploads/uploads.module';
     UsersModule,
     ShopsModule,
     SuppliersModule,
-    UploadsModule
+    UploadsModule,
+    ExportModule,
   ],
 })
 export class AppModule {}
