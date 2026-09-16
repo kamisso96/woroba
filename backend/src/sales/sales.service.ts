@@ -65,6 +65,8 @@ export class SalesService {
           sellerId: userId,
           totalAmount: total,
           paymentMethod: dto.paymentMethod ?? PaymentMethod.CASH,
+          customerName: dto.customerName ?? null,
+          customerPhone: dto.customerPhone ?? null,
           saleItems: { create: saleItemsData },
         },
         include: { saleItems: true },
@@ -159,7 +161,7 @@ export class SalesService {
     let logoBuffer: Buffer | null = null;
     if (sale.shop.logoUrl) {
       try {
-        const safeName = basename(sale.shop.logoUrl); // securite path traversal
+        const safeName = basename(sale.shop.logoUrl);
         const logoPath = join(process.cwd(), 'uploads', safeName);
         if (existsSync(logoPath)) {
           logoBuffer = readFileSync(logoPath);
@@ -178,7 +180,7 @@ export class SalesService {
     return { buffer, filename };
   }
 
-    private buildReceiptPdf(
+  private buildReceiptPdf(
     sale: any,
     currency: string,
     shortId: string,
@@ -211,7 +213,7 @@ export class SalesService {
             maximumFractionDigits: 0,
           })
             .format(n)
-            .replace(/\u202f|\u00a0/g, ' '); // remplace les espaces insecables
+            .replace(/\u202f|\u00a0/g, ' ');
           return `${formatted} ${currency === 'XOF' ? 'F CFA' : currency}`;
         };
 
@@ -220,7 +222,6 @@ export class SalesService {
         // ============================================
         const headerHeight = 120;
 
-        // Rectangle vert plein (avec stroke = fill pour eviter les bugs)
         doc
           .save()
           .rect(0, 0, pageWidth, headerHeight)
@@ -230,12 +231,8 @@ export class SalesService {
         // Logo de la boutique (ou fallback "Woroba")
         if (logoBuffer) {
           try {
-            // Logo centre verticalement dans le bandeau (120px de haut)
-            // Hauteur max 60px, largeur auto pour garder les proportions
             doc.image(logoBuffer, leftX, 30, { height: 50, fit: [200, 50] });
           } catch {
-            // Si l'image est corrompue / format non supporte (webp, gif) :
-            // fallback sur le texte
             doc
               .fillColor('#ffffff')
               .fontSize(28)
@@ -250,7 +247,7 @@ export class SalesService {
             .text('Woroba', leftX, 32, { lineBreak: false });
         }
 
-        // Nom de la boutique (toujours affiche sous le logo / Woroba)
+        // Nom de la boutique
         doc
           .fillColor('#d1fae5')
           .fontSize(9)
@@ -315,7 +312,7 @@ export class SalesService {
             });
         }
 
-        // --- Colonne droite : DATE / VENDEUR / PAIEMENT ---
+        // --- Colonne droite : DATE / VENDEUR / PAIEMENT / CLIENT ---
         const col2X = pageWidth / 2 + 20;
 
         let ry = headerHeight + 30;
@@ -378,12 +375,34 @@ export class SalesService {
             { lineBreak: false },
           );
 
+        // CLIENT (si renseigne)
+        if (sale.customerName) {
+          ry += 20;
+
+          doc
+            .fillColor('#94a3b8')
+            .fontSize(9)
+            .font('Helvetica-Bold')
+            .text('CLIENT', col2X, ry, { lineBreak: false });
+
+          const clientText = sale.customerPhone
+            ? `${sale.customerName}  ·  ${sale.customerPhone}`
+            : sale.customerName;
+
+          doc
+            .fillColor('#334155')
+            .fontSize(10)
+            .font('Helvetica')
+            .text(clientText, col2X + 70, ry, {
+              lineBreak: false,
+            });
+        }
+
         // ============================================
         // TABLEAU DES ARTICLES
         // ============================================
         y = headerHeight + 130;
 
-        // Sous-titre section
         doc
           .fillColor('#0f172a')
           .fontSize(11)
@@ -398,7 +417,7 @@ export class SalesService {
         const col1W = contentWidth * 0.52;
         const tableCol2X = leftX + contentWidth * 0.55;
         const col2W = contentWidth * 0.15 - colPadding;
-        const col3X = leftX + contentWidth * 0.70;
+        const col3X = leftX + contentWidth * 0.7;
         const col3W = contentWidth * 0.15 - colPadding;
         const col4X = leftX + contentWidth * 0.85;
         const col4W = contentWidth * 0.15 - colPadding;
@@ -411,10 +430,7 @@ export class SalesService {
           .fill('#f1f5f9')
           .restore();
 
-        doc
-          .fillColor('#475569')
-          .fontSize(9)
-          .font('Helvetica-Bold');
+        doc.fillColor('#475569').fontSize(9).font('Helvetica-Bold');
 
         doc.text('ARTICLE', col1X + colPadding, y + 11, {
           width: col1W - colPadding,
@@ -442,7 +458,6 @@ export class SalesService {
         const rowHeight = 30;
 
         sale.saleItems.forEach((item: any, idx: number) => {
-          // Fond alterne
           if (idx % 2 === 1) {
             doc
               .save()
@@ -461,7 +476,7 @@ export class SalesService {
             ellipsis: true,
             lineBreak: false,
           });
-          doc.text(String(item.quantity), col2X, y + 10, {
+          doc.text(String(item.quantity), tableCol2X, y + 10, {
             width: col2W,
             align: 'right',
             lineBreak: false,
@@ -477,7 +492,6 @@ export class SalesService {
             lineBreak: false,
           });
 
-          // Separateur
           doc
             .moveTo(leftX, y + rowHeight)
             .lineTo(rightX, y + rowHeight)
@@ -524,7 +538,6 @@ export class SalesService {
         // ============================================
         const footerY = pageHeight - 130;
 
-        // Ligne separatrice
         doc
           .moveTo(leftX, footerY)
           .lineTo(rightX, footerY)

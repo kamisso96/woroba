@@ -2,16 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Bell,
-  Monitor,
-  Moon,
-  Search,
-  Settings,
-  Sun,
-} from 'lucide-react';
+import { Bell, Monitor, Moon, Search, Settings, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 
 export function PageHeader(_props: {
@@ -31,33 +23,32 @@ export function PageHeader(_props: {
     : '?';
 
   return (
-    <header className="sticky top-0 z-30 bg-card">
-      <div className="flex items-center gap-3 px-6 py-5 lg:px-8">
-        {/* Recherche — limitée à gauche */}
-        <div className="relative w-full max-w-md">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <header className="sticky top-0 z-30 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+      <div className="flex items-center gap-3 px-6 py-3.5 lg:px-8">
+        {/* Recherche — pilule compacte */}
+        <div className="relative w-full max-w-sm">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
-            placeholder="Rechercher un produit, une vente..."
-            className="h-10 w-full rounded-lg border border-input bg-background/60 pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/60 focus:bg-background"
+            placeholder="Rechercher un article..."
+            className="h-10 w-full rounded-full border border-transparent bg-muted/60 pl-11 pr-11 text-sm outline-none transition-colors placeholder:text-muted-foreground hover:bg-muted focus:border-primary/40 focus:bg-muted"
           />
+          <Search className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* Spacer — pousse les icônes à droite */}
         <div className="flex-1" />
 
         {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="tap relative h-10 w-10 shrink-0 p-0"
+        <button
+          className="tap relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           aria-label="Notifications"
         >
           <Bell className="h-5 w-5" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
-        </Button>
+          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-2 ring-card" />
+        </button>
 
-        {/* Avatar + menu custom */}
+        {/* Avatar + menu */}
         <UserMenu
           initials={initials}
           fullName={user?.fullName}

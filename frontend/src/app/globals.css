@@ -77,6 +77,10 @@
 }
 
 @layer base {
+  html {
+    /* Augmente toutes les tailles (polices, icones, paddings, etc.) */
+    font-size: 18px;
+  }
   * {
     border-color: var(--color-border);
   }

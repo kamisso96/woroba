@@ -19,6 +19,8 @@ export type Sale = {
   totalAmount: string;
   paymentMethod: PaymentMethod;
   status: 'COMPLETED' | 'CANCELLED';
+  customerName: string | null;
+  customerPhone: string | null;
   createdAt: string;
   saleItems: SaleItem[];
   seller?: { fullName: string };
@@ -27,6 +29,8 @@ export type Sale = {
 export type SaleInput = {
   items: { productId: string; quantity: number }[];
   paymentMethod?: PaymentMethod;
+  customerName?: string;
+  customerPhone?: string;
 };
 
 export async function fetchSales(): Promise<Sale[]> {
@@ -45,7 +49,7 @@ export async function createSale(input: SaleInput): Promise<Sale> {
 }
 
 export const paymentMethodLabels: Record<PaymentMethod, string> = {
-  CASH: 'Especes',
+  CASH: 'Espèces',
   MOBILE_MONEY: 'Mobile Money',
   CARD: 'Carte',
   OTHER: 'Autre',
