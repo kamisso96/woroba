@@ -26,13 +26,14 @@ export class ShopsService {
     return shop;
   }
 
-  async create(userId: string, dto: CreateShopDto) {
+    async create(userId: string, dto: CreateShopDto) {
     return this.prisma.shop.create({
       data: {
         ownerId: userId,
         name: dto.name,
         currency: dto.currency ?? 'XOF',
         address: dto.address ?? null,
+        logoUrl: dto.logoUrl ?? null,
       },
     });
   }

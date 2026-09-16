@@ -5,8 +5,10 @@ import {
   Param,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -35,5 +37,22 @@ export class SalesController {
   @Get(':id')
   findOne(@CurrentShop() shopId: string, @Param('id') id: string) {
     return this.service.findOne(shopId, id);
+  }
+
+  @Get(':id/receipt')
+  async receipt(
+    @CurrentShop() shopId: string,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
+    const { buffer, filename } = await this.service.generateReceipt(shopId, id);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${filename}"`,
+    );
+    res.setHeader('Content-Length', buffer.length);
+    res.end(buffer);
   }
 }

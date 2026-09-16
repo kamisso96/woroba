@@ -12,4 +12,8 @@ export class CreateShopDto {
   @IsOptional()
   @IsString()
   address?: string;
+
+  @IsOptional()
+  @IsString()
+  logoUrl?: string;
 }

@@ -15,11 +15,10 @@ export type ShopInput = {
   name: string;
   currency?: string;
   address?: string;
-};
-
-export type ShopUpdateInput = Partial<ShopInput> & {
   logoUrl?: string;
 };
+
+export type ShopUpdateInput = Partial<ShopInput>;
 
 export async function fetchShops(): Promise<Shop[]> {
   const { data } = await api.get('/shops');

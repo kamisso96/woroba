@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/nav/page-header';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ListSkeleton } from '@/components/ui/loading-skeleton';
 import { ExportButton } from '@/components/ui/export-button';
+import { ReceiptActions } from '@/components/sales/receipt-actions';
 import { useSales } from '@/lib/queries/use-sales';
 import { formatPrice } from '@/lib/products';
 import { paymentMethodLabels } from '@/lib/sales';
@@ -61,7 +62,7 @@ export default function SalesPage() {
                 <li key={s.id} className={`animate-slide-up ${staggerClass}`}>
                   <Card className="card-interactive">
                     <CardContent className="p-4">
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3">
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-medium">
                             {new Date(s.createdAt).toLocaleString('fr-FR', {
@@ -90,10 +91,14 @@ export default function SalesPage() {
                             )}
                           </ul>
                         </div>
-                        <div className="shrink-0 text-right">
-                          <p className="text-base font-semibold">
-                            {formatPrice(s.totalAmount)}
-                          </p>
+
+                        <div className="flex shrink-0 items-center gap-1">
+                          <div className="mr-1 text-right">
+                            <p className="text-base font-semibold">
+                              {formatPrice(s.totalAmount)}
+                            </p>
+                          </div>
+                          <ReceiptActions sale={s} />
                         </div>
                       </div>
                     </CardContent>
